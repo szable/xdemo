@@ -3,8 +3,9 @@ package com.abc.xdemo.mapper;
 import com.abc.xdemo.model.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Mapper
 public interface UserMapper {
@@ -13,5 +14,8 @@ public interface UserMapper {
     void insert(User user);
 
     @Select("select * from USER where token = #{token}")
-    User findByToken(@RequestParam(name = "token") String token);
+    User findByToken(@Param("token") String token);
+
+    @Select("select * from USER where id = #{id}")
+    User findById(@Param("id") Integer creator);
 }

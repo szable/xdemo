@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="bootstrap3/css/bootstrap.css">
     <link rel="stylesheet" href="bootstrap3/css/bootstrap-theme.css">
+    <link rel="stylesheet" href="bootstrap3/css/xdemo.css">
 
     <script src="jquery/jquery-3.3.1.min.js"></script>
     <script src="bootstrap3/js/bootstrap.js"></script>
@@ -20,7 +21,7 @@
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                     <span class="sr-only">XDemo社区</span>
                 </button>
-                <a class="navbar-brand" href="#">XDemo社区</a>
+                <a class="navbar-brand" th:href="@{/}" >XDemo社区</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -34,7 +35,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li th:if="${session.user == null}"><a href="https://github.com/login/oauth/authorize?client_id=20f7d9bee445bb939de6&redirect_uri=http://localhost:8081/xdemo/callback&scope=user&state=1">登录</a></li>
                     <li th:action="${session.user != null}">
-                        <a href="#" th:href="@{/publish}">发布</a>
+                        <a href="#" th:href="@{/publish}">发现</a>
                     </li>
                     <li th:if="${session.user != null}" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" ><b th:text="${session.user.getName()}"></b> <span class="caret"></span></a>
@@ -52,32 +53,62 @@
     <div class="container-fluid main">
         <div class="row">
             <div class="col-lg-9 col-md-12 col-sm-12">
-                <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>发起</h2>
+                <h2><span class="glyphicon glyphicon-list" aria-hidden="true"></span>发起</h2>
                 <hr>
-                <form action="#" th:action="@{/publish}" method="post">
-                    <div class="form-group">
-                        <label for="title">问题标题（简单扼要）：</label>
-                        <input th:value="${title}" type="text" name="title" class="form-control" id="title" placeholder="题标题......">
+                    <div class="media">
+                    <div th:each="question:${pagination.questions} ">
+                        <div class="media-left">
+                            <a href="#">
+                                <img class="media-object img-rounded img-size-38" th:src="${question.getUser().getAvatarUrl()}" src="https://avatars1.githubusercontent.com/u/8563978?v=4" alt="">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading" th:text="${question.getTitle()}">如何学习spring boot， 达到精通？</h4>
+                            <span class="" th:text="${question.getDescription()}"></span><br>
+                            <span class="title-tail">
+                                <span th:text="${question.getCommentCount()}"></span> 个评论 •
+                                <span th:text="${question.getViewCount()}"></span> 次浏览 •
+                                <span th:text="${#dates.format(question.getGmtCreate(), 'dd/MM/yyyy HH:mm')}" ></span>
+                            </span>
+                        </div>
+                        <br>
                     </div>
-                    <div class="form-group">
-                        <label for="description">问题补充（必填，请参照右侧提示）：</label>
-                        <textarea th:text="${description}" name="description" class="form-control" id="description" rows="10" cols="30"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="tag">添加标签：</label>
-                        <input th:value="${tag}" type="text" name="tag" class="form-control" id="tag" placeholder="添加标签，以，号分隔">
-                    </div>
+                    <nav aria-label="Page navigation" style="float: right">
+                        <ul class="pagination">
+                            <li>
+                                <a th:if="${pagination.showFirstPage}" th:href="@{/(page=1)}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
 
-                    <div class="alert alert-danger" role="alert" th:if="${error}" th:text="${error}"></div>
-                    <div>
-                        <button type="submit" class="btn btn-success submit-btn">发布</button>
-                    </div>
+                            <li>
+                                <a th:if="${pagination.showPrevious}" th:href="@{/(page=${pagination.page}-1)}" aria-label="Previous">
+                                    <span aria-hidden="true">&lt;</span>
+                                </a>
+                            </li>
 
-                </form>
+                            <li th:class="${pagination.page == page}?'active':''" th:each="page: ${pagination.getPages()}">
+                                <a th:href="@{/(page=${page})}" th:text="${page}"></a></li>
+
+                            <li>
+                                <a th:if="${pagination.showNext}" th:href="@{/(page=${pagination.page}+1)}" aria-label="Next">
+                                    <span aria-hidden="true">&gt;</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a th:if="${pagination.showLastPage}" th:href="@{/(page=${pagination.totalPage})}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                </div>
 
             </div>
             <div class="col-lg-3 col-md-12 col-sm-12">
-                <h3>热门话题</h3>
+                <h3>热门话题!!!</h3>
             </div>
         </div>
     </div>

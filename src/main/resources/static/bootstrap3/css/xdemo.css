@@ -11,3 +11,14 @@ body {
     float: right;
     margin-bottom: 15px;
 }
+
+.img-size-38 {
+    width: 60px;
+    height: 60px;
+}
+
+.title-tail {
+    font-size: 12px;
+    font-weight: normal;
+    color: #999;
+}
